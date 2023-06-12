@@ -1,0 +1,21 @@
+{
+	"name": "govee-lights",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-govee-lights.git"
+	},
+	"dependencies": {
+		"@companion-module/base": "~1.4.1",
+		"colorsys": "^1.0.22",
+		"node-govee-led": "^1.5.1"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^1.2.1"
+	}
+}
