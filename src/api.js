@@ -210,7 +210,7 @@ module.exports = {
 			'datetime': new Date().getTime()
 		};*/
 
-		self.API_CALLS.push(apiCallObj);
+		//self.API_CALLS.push(apiCallObj);
 
 		//self.checkApiCalls();
 	},
