@@ -12,6 +12,8 @@ module.exports = {
 		variables.push({ variableId: 'brightness', name: 'Last Set Brightness' })
 		variables.push({ variableId: 'color', name: 'Last Set Color' })
 
+		//variables.push({ variableId: 'api_calls_remaining', name: 'API Calls Remaining' })
+
 		self.setVariableDefinitions(variables);
 	},
 

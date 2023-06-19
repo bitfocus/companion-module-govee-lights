@@ -72,6 +72,7 @@ module.exports = {
 
 		self.GOVEE.getDevices()
 		.then(function(data) {
+			self.updateApiCalls('getdevices');
 			self.log('info', 'Govee Devices Auto-Detected.');
 			self.buildDeviceList.bind(self)(data);
 			
@@ -80,11 +81,15 @@ module.exports = {
 				let goveeDevice = self.GOVEE_DEVICES.find(device => device.id === self.config.govee_device);
 				if (!goveeDevice) {
 					self.config.govee_device = 'select';
+					self.getConfigFields();
+					self.configUpdated(self.config);
+					self.updateStatus(InstanceStatus.Connecting, 'Devices Auto-Detected. Please select a device.');
 				}
-			}
-			self.getConfigFields();
-			self.configUpdated(self.config);
-			self.updateStatus(InstanceStatus.Connecting, 'Devices Auto-Detected. Please select a device.');
+				else {
+					self.GOVEE = new Govee({apiKey: self.config.api_key, mac: goveeDevice.id, model: goveeDevice.model});
+					self.updateStatus(InstanceStatus.Ok);
+				}
+			}			
 		})
 		.catch(function(error) {
 			console.log(error);
@@ -124,6 +129,7 @@ module.exports = {
 
 		self.GOVEE.getDevices()
 		.then(function(data) {
+			self.updateApiCalls('getdevices');
 			self.buildDeviceList.bind(self)(data);
 
 			//loop through govee devices, find ours, and grab its data
@@ -152,6 +158,7 @@ module.exports = {
 
 		self.GOVEE.getState()
 		.then(function(data) {
+			self.updateApiCalls('getstate');
 			console.log(data);
 		})
 		.catch(function(error) {
@@ -191,5 +198,47 @@ module.exports = {
 			self.log('error', 'Unknown error occurred.');
 			console.log(err);
 		}
+	},
+
+	updateApiCalls: function(command) {
+		let self = this;
+
+		//store the api call in the array
+
+		/*let apiCallObj = {
+			'command': command,
+			'datetime': new Date().getTime()
+		};*/
+
+		self.API_CALLS.push(apiCallObj);
+
+		//self.checkApiCalls();
+	},
+
+	checkApiCalls: function() {
+		let self = this;
+
+		//first clear the timeout
+		clearTimeout(self.API_INTERVAL);
+
+		//check each element in the array to see if it is older than one minute, and remove it if so
+		let now = new Date().getTime();
+
+		for (let i = 0; i < self.API_CALLS.length; i++) {
+			if (now - self.API_CALLS[i].datetime > 60000) {
+				self.API_CALLS.splice(i, 1); //this one happened more than a minute ago, remove it
+				self.INFO.api_calls_remaining++;
+			}
+		}
+
+		//update API calls remaining variable
+		self.INFO.api_calls_remaining = self.INFO.api_calls_remaining - self.API_CALLS.length;
+		if (self.INFO.api_calls_remaining < 0) {
+			self.INFO.api_calls_remaining = 0;
+		}
+
+		self.setVariableValues({'api_calls_remaining': self.INFO.api_calls_remaining});
+
+		self.API_INTERVAL = setTimeout(this.checkApiCalls.bind(self), 10000); //check it again in 10 seconds
 	}
 }

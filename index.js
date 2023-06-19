@@ -23,7 +23,9 @@ class goveeInstance extends InstanceBase {
 			...api,
 		})
 
-		this.INTERVAL = null; //used to poll the device every second
+		this.INTERVAL = null; //used to poll the device
+
+		this.API_INTERVAL = null; //used to track how many API calls have been made in the last minute
 
 		this.GOVEE = null;
 
@@ -36,7 +38,10 @@ class goveeInstance extends InstanceBase {
 			power: 'off',
 			brightness: '',
 			color: '',
+			api_calls_remaining: 10
 		};
+
+		this.API_CALLS = []; //used to store the last 10 API calls
 	}
 
 	async destroy() {
@@ -45,6 +50,11 @@ class goveeInstance extends InstanceBase {
 		if (self.INTERVAL) {
 			clearInterval(self.INTERVAL);
 			self.INTERVAL = null;
+		}
+
+		if (self.API_INTERVAL) {
+			clearInterval(self.API_INTERVAL);
+			self.API_INTERVAL = null;
 		}
 	}
 
