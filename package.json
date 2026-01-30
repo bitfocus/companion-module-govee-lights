@@ -16,6 +16,6 @@
 		"node-govee-led": "^1.5.1"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.2.1"
+		"@companion-module/tools": "^1.5.2"
 	}
 }
