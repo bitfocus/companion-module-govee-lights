@@ -3,8 +3,8 @@
 	"version": "1.0.3",
 	"main": "index.js",
 	"scripts": {
-		"build": "companion-module-build",
-		"test": "node --test"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "companion-module-build"
 	},
 	"license": "MIT",
 	"repository": {
